@@ -1,7 +1,9 @@
 from eller_generator import Eller
+from img_renderer import ImageRenderer
 from text_renderer import TextMazeRenderer
-
 
 if __name__ == '__main__':
     size = 100
-    TextMazeRenderer.render(Eller.generate_maze_of_size(size))
+    maze = Eller.generate_maze_of_size(size)
+    TextMazeRenderer.render(maze)
+    ImageRenderer.render(maze)
