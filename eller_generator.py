@@ -26,11 +26,11 @@ class EllerGenerator:
         for i in range(self.n):
             prev = self.generate_row(i, prev)
         # finalization: last row post-conditions
-        # for j in range(1, len(prev.vertices)):
-        #     le, ri = prev.vertices[j - 1], prev.vertices[j]
-        #     if not prev.uf.connected(le, ri):
-        #         prev.uf.connect(le, ri)
-        #         self.maze.add_edge(Edge(le, ri))
+        for j in range(1, len(prev.vertices)):
+            le, ri = prev.vertices[j - 1], prev.vertices[j]
+            if not prev.uf.connected(le, ri):
+                prev.uf.connect(le, ri)
+                self.maze.add_edge(Edge(le, ri))
         return self.maze
 
     def generate_row(self, i, prev: PrevRowSummary):
