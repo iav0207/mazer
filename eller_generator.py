@@ -78,7 +78,11 @@ class Eller:
             row = last_row_summary
             for j in range(1, len(row.vertices)):
                 le, ri = row.vertices[j - 1], row.vertices[j]
-                if not row.uf.connected(le, ri):
+                if row.uf.connected(le, ri):
+                    continue
+                # this is wrong i suppose, but it kinda works
+                sizes = [row.uf.size_of_set_including(v) for v in [le, ri]]
+                if any(size < 3 for size in sizes):
                     row.uf.connect(le, ri)
                     self.maze.add_edge(Edge(le, ri))
 

@@ -14,13 +14,16 @@ class UnionFind:
         root_q = self._root(q)
         if root_p == root_q:
             return
-        heavy_root = max(root_p, root_q, key=self._size_of_set)
+        heavy_root = max(root_p, root_q, key=self._size_of_subtree)
         light_root = root_q if heavy_root == root_p else root_p
         self._merge_p_to_q(light_root, heavy_root)
-        self._increase_set_size_by(heavy_root, self._size_of_set(light_root))
+        self._increase_set_size_by(heavy_root, self._size_of_subtree(light_root))
         self._count -= 1
 
-    def _size_of_set(self, root):
+    def size_of_set_including(self, item):
+        return self._size_of_subtree(self._root(item))
+
+    def _size_of_subtree(self, root):
         return self._size[self._idx[root]]
 
     def _increase_set_size_by(self, root, increment):
