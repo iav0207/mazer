@@ -5,6 +5,10 @@ from uf import UnionFind
 from vo import Vertex, Edge, Maze
 
 
+def create_vertices(row_i, maze_n):
+    return [Vertex(j, row_i) for j in range(maze_n)]
+
+
 class EllerGenerator:
     def __init__(self, n, thresh=0.7):
         self.n = n
@@ -21,46 +25,60 @@ class EllerGenerator:
             for vtx in self.vertices:
                 self.get_connected(vtx).append(vtx)
 
+    class RowGenerator:
+        def __init__(self, maze_gen, row_i, prev_row_summary):
+            self.maze_gen = maze_gen
+            self.i = row_i
+            self.prev = prev_row_summary
+
+            self.curr_row = create_vertices(self.i, self.maze_gen.n)
+            self.uf = UnionFind([*self.prev.vertices, *self.curr_row])
+            # restoring UF state of prev row
+            for set_id, vertices in self.prev.map.items():
+                for v in vertices[1:]:
+                    self.uf.connect(vertices[0], v)
+
+        def generate(self):
+            self.create_vertical_connections_from_prev_row()
+            self.generate_horizontal_connections_in_curr_row()
+
+            return EllerGenerator.PrevRowSummary(self.curr_row, self.uf)
+
+        def create_vertical_connections_from_prev_row(self):
+            for vertices_set in self.prev.map.values():
+                vtx = self.maze_gen.random.choice(vertices_set)
+                self.connect(vtx, self.curr_row[vtx.x])
+
+        def generate_horizontal_connections_in_curr_row(self):
+            for j in range(1, self.maze_gen.n):
+                le, ri = self.curr_row[j - 1], self.curr_row[j]
+                if not self.uf.connected(le, ri) and self.will_connect():
+                    self.connect(le, ri)
+
+        def connect(self, v1, v2):
+            self.uf.connect(v1, v2)
+            self.maze_gen.maze.add_edge(Edge(v1, v2))
+
+        def will_connect(self):
+            return self.maze_gen.will_connect()
+
     def generate(self):
         prev = EllerGenerator.PrevRowSummary()
         for i in range(self.n):
-            prev = self.generate_row(i, prev)
-        # finalization: last row post-conditions
-        for j in range(1, len(prev.vertices)):
-            le, ri = prev.vertices[j - 1], prev.vertices[j]
-            if not prev.uf.connected(le, ri):
-                prev.uf.connect(le, ri)
-                self.maze.add_edge(Edge(le, ri))
+            prev = EllerGenerator.RowGenerator(self, i, prev).generate()
+
+        self.finalize(prev)
+
         return self.maze
 
-    def generate_row(self, i, prev: PrevRowSummary):
-        curr_row = self.create_vertices(i)
-        uf = UnionFind([*prev.vertices, *curr_row])
-
-        # restoring UF state of prev row
-        for set_id, vertices in prev.map.items():
-            for v in vertices[1:]:
-                uf.connect(vertices[0], v)
-
-        def connect(v1, v2):
-            uf.connect(v1, v2)
-            self.maze.add_edge(Edge(v1, v2))
-
-        # vertical binding
-        for vertices_set in prev.map.values():
-            vtx = self.random.choice(vertices_set)
-            connect(vtx, curr_row[vtx.x])
-
-        # horizontal binding
-        for j in range(1, self.n):
-            le, ri = curr_row[j-1], curr_row[j]
-            if not uf.connected(le, ri) and self.will_connect():
-                connect(le, ri)
-
-        return EllerGenerator.PrevRowSummary(curr_row, uf)
-
-    def create_vertices(self, row_i):
-        return [Vertex(j, row_i) for j in range(self.n)]
+    def finalize(self, last_row_summary):
+        """satisfying last row post-conditions: no isolated regions should be left"""
+        row = last_row_summary
+        for j in range(1, len(row.vertices)):
+            le, ri = row.vertices[j - 1], row.vertices[j]
+            if not row.uf.connected(le, ri):
+                row.uf.connect(le, ri)
+                self.maze.add_edge(Edge(le, ri))
 
     def will_connect(self):
         return self.random.random() > self.thresh
