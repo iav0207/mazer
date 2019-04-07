@@ -3,13 +3,13 @@ from PIL import Image, ImageDraw
 from vo import Maze, Edge, Vertex
 
 
-class ImageRenderer:
+class ImageMazeRenderer:
     line_width = 2
 
     @staticmethod
     def render(maze: Maze):
 
-        lw = ImageRenderer.line_width
+        lw = ImageMazeRenderer.line_width
         dlw = 2 * lw
 
         def convert(maze_coord):
