@@ -57,7 +57,7 @@ class Eller:
         def will_connect(self):
             return self.maze_gen.will_connect()
 
-    class MazeGenerator:
+    class _MazeGenerator:
         def __init__(self, n, thresh=0.7):
             self.n = n
             self.thresh = thresh
@@ -88,3 +88,7 @@ class Eller:
 
         def will_connect(self):
             return self.random.random() > self.thresh
+
+    @staticmethod
+    def generate_maze_of_size(n):
+        return Eller._MazeGenerator(n).generate()

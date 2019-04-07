@@ -47,6 +47,12 @@ class Maze:
         for vtx in e.v:
             self.map[self.validated(vtx)].add(e)
 
+    def get_all_edges(self):
+        return {edge for edges in self.map.values() for edge in edges}
+
+    def get_accessible_neighbours(self, vertex):
+        return self.map[self.validated(vertex)].copy()
+
     def validated(self, v: Vertex):
         assert 0 <= v.x < self.n and 0 <= v.y < self.n
         return v

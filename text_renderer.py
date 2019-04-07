@@ -14,13 +14,12 @@ class TextMazeRenderer:
         def convert(maze_coord):
             return 1 + 3 * maze_coord
 
-        for edges in maze.map.values():
-            for edge in edges:
-                xr = {convert(vtx.x) for vtx in edge.v}
-                yr = {convert(vtx.y) for vtx in edge.v}
-                for x in range(min(xr), max(xr) + 1):
-                    for y in range(min(yr), max(yr) + 1):
-                        board[x][y] = False
+        for edge in maze.get_all_edges():
+            xr = {convert(vtx.x) for vtx in edge.v}
+            yr = {convert(vtx.y) for vtx in edge.v}
+            for x in range(min(xr), max(xr) + 1):
+                for y in range(min(yr), max(yr) + 1):
+                    board[x][y] = False
         board[0][1] = False
         board[n-1][n-2] = False
 
