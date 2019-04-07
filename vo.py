@@ -14,7 +14,7 @@ class Vertex:
         return edge.other(self)
 
     def __eq__(self, other):
-        return self.x, self.y == other.x, other.y
+        return (self.x, self.y) == (other.x, other.y)
 
     def __hash__(self):
         return hash((self.x, self.y))
