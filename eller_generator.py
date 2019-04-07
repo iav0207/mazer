@@ -38,20 +38,18 @@ class EllerGenerator:
         uf = UnionFind([*prev.vertices, *curr_row])
 
         # restoring UF state of prev row
-        if len(prev.map):
-            for set_id, vertices in prev.map.items():
-                for v in vertices[1:]:
-                    uf.connect(vertices[0], v)
+        for set_id, vertices in prev.map.items():
+            for v in vertices[1:]:
+                uf.connect(vertices[0], v)
 
         def connect(v1, v2):
             uf.connect(v1, v2)
             self.maze.add_edge(Edge(v1, v2))
 
         # vertical binding
-        if i > 0:
-            for vtx in prev.vertices:
-                if len(prev.get_set_of(vtx)) == 1:
-                    connect(vtx, curr_row[vtx.x])
+        for vtx in prev.vertices:
+            if len(prev.get_set_of(vtx)) == 1:
+                connect(vtx, curr_row[vtx.x])
 
         # horizontal binding
         for j in range(1, self.n):
