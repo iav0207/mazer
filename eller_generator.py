@@ -9,14 +9,9 @@ def create_vertices(row_i, maze_n):
     return [Vertex(j, row_i) for j in range(maze_n)]
 
 
-class EllerGenerator:
-    def __init__(self, n, thresh=0.7):
-        self.n = n
-        self.thresh = thresh
-        self.maze = Maze(n)
-        self.random = Random()
+class Eller:
 
-    class PrevRowSummary:
+    class _PrevRowSummary:
         def __init__(self, vertices=None, uf=None):
             self.vertices = vertices or []
             self.uf = uf or UnionFind(self.vertices)
@@ -25,7 +20,7 @@ class EllerGenerator:
             for vtx in self.vertices:
                 self.get_connected(vtx).append(vtx)
 
-    class RowGenerator:
+    class _RowGenerator:
         def __init__(self, maze_gen, row_i, prev_row_summary):
             self.maze_gen = maze_gen
             self.i = row_i
@@ -42,7 +37,7 @@ class EllerGenerator:
             self.create_vertical_connections_from_prev_row()
             self.generate_horizontal_connections_in_curr_row()
 
-            return EllerGenerator.PrevRowSummary(self.curr_row, self.uf)
+            return Eller._PrevRowSummary(self.curr_row, self.uf)
 
         def create_vertical_connections_from_prev_row(self):
             for vertices_set in self.prev.map.values():
@@ -62,23 +57,30 @@ class EllerGenerator:
         def will_connect(self):
             return self.maze_gen.will_connect()
 
-    def generate(self):
-        prev = EllerGenerator.PrevRowSummary()
-        for i in range(self.n):
-            prev = EllerGenerator.RowGenerator(self, i, prev).generate()
+    class MazeGenerator:
+        def __init__(self, n, thresh=0.7):
+            self.n = n
+            self.thresh = thresh
+            self.maze = Maze(n)
+            self.random = Random()
 
-        self.finalize(prev)
+        def generate(self):
+            prev = Eller._PrevRowSummary()
+            for i in range(self.n):
+                prev = Eller._RowGenerator(self, i, prev).generate()
 
-        return self.maze
+            self.finalize(prev)
 
-    def finalize(self, last_row_summary):
-        """satisfying last row post-conditions: no isolated regions should be left"""
-        row = last_row_summary
-        for j in range(1, len(row.vertices)):
-            le, ri = row.vertices[j - 1], row.vertices[j]
-            if not row.uf.connected(le, ri):
-                row.uf.connect(le, ri)
-                self.maze.add_edge(Edge(le, ri))
+            return self.maze
 
-    def will_connect(self):
-        return self.random.random() > self.thresh
+        def finalize(self, last_row_summary):
+            """satisfying last row post-conditions: no isolated regions should be left"""
+            row = last_row_summary
+            for j in range(1, len(row.vertices)):
+                le, ri = row.vertices[j - 1], row.vertices[j]
+                if not row.uf.connected(le, ri):
+                    row.uf.connect(le, ri)
+                    self.maze.add_edge(Edge(le, ri))
+
+        def will_connect(self):
+            return self.random.random() > self.thresh
