@@ -6,7 +6,7 @@ from vo import Vertex, Edge, Maze
 
 
 class EllerGenerator:
-    def __init__(self, n, thresh=0.8):
+    def __init__(self, n, thresh=0.7):
         self.n = n
         self.thresh = thresh
         self.maze = Maze(n)
@@ -17,9 +17,9 @@ class EllerGenerator:
             self.vertices = vertices or []
             self.uf = uf or UnionFind(self.vertices)
             self.map = defaultdict(list)
-            self.get_set_of = lambda v: self.map[uf.find(v)]
+            self.get_connected = lambda v: self.map[uf.find(v)]
             for vtx in self.vertices:
-                self.get_set_of(vtx).append(vtx)
+                self.get_connected(vtx).append(vtx)
 
     def generate(self):
         prev = EllerGenerator.PrevRowSummary()
@@ -47,15 +47,14 @@ class EllerGenerator:
             self.maze.add_edge(Edge(v1, v2))
 
         # vertical binding
-        for vtx in prev.vertices:
-            if len(prev.get_set_of(vtx)) == 1:
-                connect(vtx, curr_row[vtx.x])
+        for vertices_set in prev.map.values():
+            vtx = self.random.choice(vertices_set)
+            connect(vtx, curr_row[vtx.x])
 
         # horizontal binding
         for j in range(1, self.n):
             le, ri = curr_row[j-1], curr_row[j]
             if not uf.connected(le, ri) and self.will_connect():
-                # print(f'horizontal binding on i={i} j={j}')
                 connect(le, ri)
 
         return EllerGenerator.PrevRowSummary(curr_row, uf)
