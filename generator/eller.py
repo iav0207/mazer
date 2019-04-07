@@ -1,7 +1,7 @@
 from collections import defaultdict
 from random import Random
 
-from uf import UnionFind
+from generator.uf import UnionFind
 from vo import Vertex, Edge, Maze
 
 
