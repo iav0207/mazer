@@ -1,6 +1,7 @@
 from PIL import Image, ImageDraw
 
-from vo import Maze, Edge, Vertex
+from model import Maze, Edge, Vertex
+from render.path import build_output_path
 
 
 class ImageMazeRenderer:
@@ -34,5 +35,5 @@ class ImageMazeRenderer:
         draw(*maze.get_all_edges())
         draw(entrance, the_exit)
 
-        image.save('out.jpg', 'JPEG')
+        image.save(build_output_path('jpg'), 'JPEG')
 

@@ -1,6 +1,7 @@
 from os import linesep as nl
 
-from vo import Maze
+from model import Maze
+from render.path import build_output_path
 
 
 class TextMazeRenderer:
@@ -23,5 +24,5 @@ class TextMazeRenderer:
         board[0][1] = False
         board[n-1][n-2] = False
 
-        with open('out.txt', 'w') as f:
+        with open(build_output_path('txt'), 'w') as f:
             f.write(nl.join([''.join(u"\u2588" if cell else ' ' for cell in row) for row in board]))

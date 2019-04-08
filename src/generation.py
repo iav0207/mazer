@@ -1,4 +1,4 @@
-from generator.eller import Eller
+from gen.eller import Eller
 
 
 def generate_eller(size):

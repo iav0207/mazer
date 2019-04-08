@@ -1,8 +1,8 @@
 from collections import defaultdict
 from random import Random
 
-from generator.uf import UnionFind
-from vo import Vertex, Edge, Maze
+from gen.uf import UnionFind
+from model import Vertex, Edge, Maze
 
 
 def create_vertices(row_i, maze_n):
