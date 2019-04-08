@@ -11,7 +11,7 @@ def create_vertices(row_i, maze_n):
 
 class Eller:
 
-    class _PrevRowSummary:
+    class PrevRowSummary:
         def __init__(self, vertices=None, uf=None):
             self.vertices = vertices or []
             self.uf = uf or UnionFind(self.vertices)
@@ -20,7 +20,7 @@ class Eller:
             for vtx in self.vertices:
                 self.get_connected(vtx).append(vtx)
 
-    class _RowGenerator:
+    class RowGenerator:
         def __init__(self, maze_gen, row_i, prev_row_summary):
             self.maze_gen = maze_gen
             self.i = row_i
@@ -37,7 +37,7 @@ class Eller:
             self.create_vertical_connections_from_prev_row()
             self.generate_horizontal_connections_in_curr_row()
 
-            return Eller._PrevRowSummary(self.curr_row, self.uf)
+            return Eller.PrevRowSummary(self.curr_row, self.uf)
 
         def create_vertical_connections_from_prev_row(self):
             for vertices_set in self.prev.map.values():
@@ -57,7 +57,7 @@ class Eller:
         def will_connect(self):
             return self.maze_gen.will_connect()
 
-    class _MazeGenerator:
+    class MazeGenerator:
         def __init__(self, n, thresh=0.7):
             self.n = n
             self.thresh = thresh
@@ -65,9 +65,9 @@ class Eller:
             self.random = Random()
 
         def generate(self):
-            prev = Eller._PrevRowSummary()
+            prev = Eller.PrevRowSummary()
             for i in range(self.n):
-                prev = Eller._RowGenerator(self, i, prev).generate()
+                prev = Eller.RowGenerator(self, i, prev).generate()
 
             self.finalize(prev)
 
@@ -91,4 +91,4 @@ class Eller:
 
     @staticmethod
     def generate_maze_of_size(n):
-        return Eller._MazeGenerator(n).generate()
+        return Eller.MazeGenerator(n).generate()
