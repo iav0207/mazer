@@ -29,4 +29,4 @@ class MazeConnectivityChecker:
         self.island_sizes.append(len(self.visited) - visited_at_start)
 
     def is_fully_connected(self):
-        return len(self.visited) == self.maze.n ** 2
+        return self.island_sizes == [self.maze.n ** 2]
