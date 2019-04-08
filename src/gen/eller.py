@@ -58,7 +58,7 @@ class Eller:
             return self.maze_gen.will_connect()
 
     class MazeGenerator:
-        def __init__(self, n, thresh=0.7):
+        def __init__(self, n, thresh=0.5):
             self.n = n
             self.thresh = thresh
             self.maze = Maze(n)
@@ -78,11 +78,7 @@ class Eller:
             row = last_row_summary
             for j in range(1, len(row.vertices)):
                 le, ri = row.vertices[j - 1], row.vertices[j]
-                if row.uf.connected(le, ri):
-                    continue
-                # this is wrong i suppose, but it kinda works
-                sizes = [row.uf.size_of_set_including(v) for v in [le, ri]]
-                if any(size < 3 for size in sizes):
+                if not row.uf.connected(le, ri):
                     row.uf.connect(le, ri)
                     self.maze.add_edge(Edge(le, ri))
 
