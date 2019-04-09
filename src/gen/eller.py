@@ -62,7 +62,7 @@ class Eller:
             return self.maze_gen.will_connect()
 
     class MazeGenerator:
-        def __init__(self, n, thresh=0.5):
+        def __init__(self, n, thresh=0.4):
             self.n = n
             self.thresh = thresh
             self.maze = Maze(n)
