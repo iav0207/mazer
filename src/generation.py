@@ -1,5 +1,5 @@
 from gen.eller import Eller
-from gen.recursive_backtracker import RecursiveBacktrackerGenerator
+from gen.recursive_backtracker import RecursiveBacktracker
 
 
 def generate_eller(size):
@@ -7,4 +7,4 @@ def generate_eller(size):
 
 
 def generate_recursive_backtracker(size):
-    return RecursiveBacktrackerGenerator(size).generate()
+    return RecursiveBacktracker.generate(size)
