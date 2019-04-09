@@ -5,10 +5,6 @@ from gen.uf import UnionFind
 from model import Vertex, Edge, Maze
 
 
-def create_vertices(row_i, maze_n):
-    return [Vertex(j, row_i) for j in range(maze_n)]
-
-
 class Eller:
 
     class PrevRowSummary:
@@ -26,12 +22,15 @@ class Eller:
             self.i = row_i
             self.prev = prev_row_summary
 
-            self.curr_row = create_vertices(self.i, self.maze_gen.n)
+            self.curr_row = self._create_vertices()
             self.uf = UnionFind([*self.prev.vertices, *self.curr_row])
             # restoring UF state of prev row
             for set_id, vertices in self.prev.map.items():
                 for v in vertices[1:]:
                     self.uf.connect(vertices[0], v)
+
+        def _create_vertices(self):
+            return [Vertex(j, self.i) for j in range(self.maze_gen.maze.n)]
 
         def generate(self):
             self.create_vertical_connections_from_prev_row()
@@ -51,6 +50,7 @@ class Eller:
                     self.connect(le, ri)
 
         def connect(self, v1, v2):
+            assert not self.uf.connected(v1, v2)    # preventing loops
             self.uf.connect(v1, v2)
             self.maze_gen.maze.add_edge(Edge(v1, v2))
 
