@@ -20,12 +20,12 @@ class RecursiveBacktracker:
             visited = set()
 
             def dive(vtx):
+                visited.add(vtx)
                 next_candidates = [n for n in self._get_neighbours(vtx) if n not in visited]
                 if not next_candidates:
                     return
                 nxt = self.random.choice(next_candidates)
                 self.maze.add_edge(Edge(vtx, nxt))
-                visited.add(nxt)
                 stack.append(nxt)
                 dive(nxt)
 
