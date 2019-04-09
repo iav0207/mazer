@@ -8,7 +8,7 @@ class ImageMazeRenderer:
     line_width = 2
 
     @staticmethod
-    def render(maze: Maze):
+    def render(maze: Maze, filename=None):
 
         lw = ImageMazeRenderer.line_width
         dlw = 2 * lw
@@ -35,5 +35,5 @@ class ImageMazeRenderer:
         draw(*maze.get_all_edges())
         draw(entrance, the_exit)
 
-        image.save(build_output_path('jpg'), 'JPEG')
+        image.save(build_output_path('jpg', file_name=filename), 'JPEG')
 

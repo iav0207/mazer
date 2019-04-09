@@ -54,5 +54,8 @@ class Maze:
         return [edge.other(vertex) for edge in self.map[self.validated(vertex)]]
 
     def validated(self, v: Vertex):
-        assert 0 <= v.x < self.n and 0 <= v.y < self.n
+        assert self.contains(v)
         return v
+
+    def contains(self, v: Vertex):
+        return 0 <= v.x < self.n and 0 <= v.y < self.n

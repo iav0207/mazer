@@ -6,7 +6,7 @@ from render.path import build_output_path
 
 class TextMazeRenderer:
     @staticmethod
-    def render(maze: Maze):
+    def render(maze: Maze, filename=None):
         n = 3 * maze.n
         board = [[]] * n
         for i in range(0, n):
@@ -24,5 +24,5 @@ class TextMazeRenderer:
         board[0][1] = False
         board[n-1][n-2] = False
 
-        with open(build_output_path('txt'), 'w') as f:
+        with open(build_output_path('txt', file_name=filename), 'w') as f:
             f.write(nl.join([''.join(u"\u2588" if cell else ' ' for cell in row) for row in board]))
