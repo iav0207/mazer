@@ -40,8 +40,12 @@ class Eller:
 
         def create_vertical_connections_from_prev_row(self):
             for vertices_set in self.prev.map.values():
-                vtx = self.maze_gen.random.choice(vertices_set)
-                self.connect(vtx, self.curr_row[vtx.x])
+                # decide how many vertices of a set will connect to the next row
+                # important: at least one should have a bridge further to prevent isolated islands
+                num_to_connect = max(1, sum([self.will_connect() for i in range(len(vertices_set))]))
+                to_connect = self.maze_gen.random.sample(vertices_set, num_to_connect)
+                for vtx in to_connect:
+                    self.connect(vtx, self.curr_row[vtx.x])
 
         def generate_horizontal_connections_in_curr_row(self):
             for j in range(1, self.maze_gen.n):
