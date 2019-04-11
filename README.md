@@ -35,4 +35,4 @@ python3 src/__main__.py
 ![Eller's generation algorithm](sample_output/Eller.jpg?raw=true "Eller's generation algorithm")
 
 #### Recursive backtracker generation 100×100
-![Recursive backtracker generation](sample_output/Eller.jpg?raw=true "Recursive backtracker maze generation")
+![Recursive backtracker generation](sample_output/RecursiveBacktracker.jpg?raw=true "Recursive backtracker maze generation")
