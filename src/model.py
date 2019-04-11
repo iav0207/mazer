@@ -45,15 +45,18 @@ class Maze:
 
     def add_edge(self, e: Edge):
         for vtx in e.v:
-            self.map[self.validated(vtx)].add(e)
+            self.map[self._validated(vtx)].add(e)
 
     def get_all_edges(self):
         return {edge for edges in self.map.values() for edge in edges}
 
     def get_accessible_neighbours(self, vertex):
-        return [edge.other(vertex) for edge in self.map[self.validated(vertex)]]
+        return [edge.other(vertex) for edge in self._edges(vertex)]
 
-    def validated(self, v: Vertex):
+    def _edges(self, v: Vertex):
+        return self.map[self._validated(v)]
+
+    def _validated(self, v: Vertex):
         assert self.contains(v)
         return v
 

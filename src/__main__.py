@@ -1,4 +1,4 @@
-from check.connectivity import MazeConnectivityChecker
+from checks import is_fully_connected, is_acyclic
 from generation import generate_eller, generate_recursive_backtracker
 from rendering import render_as_image, render_as_text
 
@@ -9,7 +9,8 @@ def generate_render_and_check(name, generator):
     render_as_text(maze, filename=name)
     render_as_image(maze, filename=name)
 
-    assert MazeConnectivityChecker(maze).is_fully_connected()
+    assert is_fully_connected(maze)
+    assert is_acyclic(maze)
 
 
 if __name__ == '__main__':
