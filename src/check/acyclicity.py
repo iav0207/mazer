@@ -10,7 +10,7 @@ class MazeAcyclicityChecker:
         visited = set()
         stack = deque()
 
-        def visit(vtx: Vertex, prev: Vertex):
+        def visit(vtx, prev):
             if vtx in visited:
                 self.loops_count += 1
                 return
