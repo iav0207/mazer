@@ -1,30 +1,28 @@
+from collections import deque
+
 from model import Maze, Vertex
 
 
 class MazeAcyclicityChecker:
     def __init__(self, maze: Maze):
         self.loops_count = 0
-        i = 0
+
         visited = set()
+        stack = deque()
 
-        def visit(vtx: Vertex, prev: Vertex = None):
-            nonlocal self, i
-            self.loops_count += vtx in visited
-            i += 1
-            print(self.loops_count)
-            print(i)
+        def visit(vtx: Vertex, prev: Vertex):
+            if vtx in visited:
+                self.loops_count += 1
+                return
             visited.add(vtx)
-            [visit(n, prev=vtx) for n in maze.get_accessible_neighbours(vtx) if not prev or n != prev]
+            for nxt in maze.get_accessible_neighbours(vtx):
+                if nxt != prev:
+                    stack.append((nxt, vtx))
 
-        import sys
-        recursion_limit = sys.getrecursionlimit()
-        sys.setrecursionlimit(maze.n ** 2 + 100)
+        stack.append((Vertex(0, 0), Vertex(0, 0)))
 
-        visit(Vertex(0, 0))
-
-        sys.setrecursionlimit(recursion_limit)
-
-        assert len(visited) == maze.n**2
+        while stack:
+            visit(*stack.pop())
 
     def is_acyclic(self):
         return self.loops_count == 0
