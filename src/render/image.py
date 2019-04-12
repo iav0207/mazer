@@ -1,6 +1,6 @@
 from PIL import Image, ImageDraw
 
-from model import Maze, Edge, Vertex
+from model import Maze, Edge, Vertex, Solution
 from render.path import build_output_path
 
 
@@ -8,8 +8,7 @@ class ImageMazeRenderer:
     line_width = 2
 
     @staticmethod
-    def render(maze: Maze, filename=None):
-
+    def render(maze: Maze, solution: Solution = None, filename=None):
         lw = ImageMazeRenderer.line_width
         dlw = 2 * lw
 
@@ -25,9 +24,9 @@ class ImageMazeRenderer:
             yr = {convert(vtx.y) for vtx in e.v}
             return min(xr), min(yr), max(xr) + 1, max(yr) + 1
 
-        def draw(*edges):
+        def draw(*edges, color='white'):
             for e in edges:
-                drawer.rectangle(as_box(e), fill='white')
+                drawer.rectangle(as_box(e), fill=color)
 
         entrance = Edge(Vertex(-1, 0), Vertex(0, 0))
         the_exit = Edge(Vertex(maze.n - 1, maze.n - 1), Vertex(maze.n, maze.n - 1))
@@ -35,5 +34,8 @@ class ImageMazeRenderer:
         draw(*maze.get_all_edges())
         draw(entrance, the_exit)
 
-        image.save(build_output_path('jpg', file_name=filename), 'JPEG')
+        if solution:
+            draw(*solution.edges, color='darkgoldenrod')
+            draw(entrance, the_exit, color='darkgoldenrod')
 
+        image.save(build_output_path('jpg', file_name=filename), 'JPEG')

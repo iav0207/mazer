@@ -7,13 +7,15 @@ from solving import find_shortest_path
 def generate_render_and_check(name, generator):
     size = 100
     maze = generator(size)
-    render_as_text(maze, filename=name)
-    render_as_image(maze, filename=name)
 
     assert is_fully_connected(maze)
     assert is_acyclic(maze)
 
-    print(f'{name} maze solution length: {len(find_shortest_path(maze))}')
+    solution = find_shortest_path(maze)
+    print(f'{name} maze solution length: {len(solution)}')
+
+    render_as_text(maze, filename=name)
+    render_as_image(maze, solution=solution, filename=name)
 
 
 if __name__ == '__main__':
