@@ -39,8 +39,10 @@ class Edge:
 
 
 class Maze:
-    def __init__(self, n):
+    def __init__(self, n, start=Vertex(0, 0), end=None):
         self.n = n
+        self.start = self._validated(start)
+        self.end = self._validated(end or Vertex(n - 1, n - 1))
         self.map = defaultdict(set)
 
     def add_edge(self, e: Edge):
@@ -52,6 +54,9 @@ class Maze:
 
     def get_accessible_neighbours(self, vertex):
         return [edge.other(vertex) for edge in self._edges(vertex)]
+
+    def get_edges(self, vertex):
+        return self._edges(vertex).copy()
 
     def _edges(self, v: Vertex):
         return self.map[self._validated(v)]
