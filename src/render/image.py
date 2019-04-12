@@ -35,7 +35,8 @@ class ImageMazeRenderer:
         draw(entrance, the_exit)
 
         if solution:
-            draw(*solution.edges, color='darkgoldenrod')
-            draw(entrance, the_exit, color='darkgoldenrod')
+            solution_color = 'limegreen'
+            draw(*solution.edges, color=solution_color)
+            draw(entrance, the_exit, color=solution_color)
 
         image.save(build_output_path('jpg', file_name=filename), 'JPEG')
