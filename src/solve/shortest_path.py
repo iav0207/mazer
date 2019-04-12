@@ -1,6 +1,6 @@
 from collections import deque
 
-from model import Maze
+from model import Maze, Solution
 
 
 class Node:
@@ -18,7 +18,7 @@ class Node:
         path = deque()
         node = self
         while node:
-            path.appendleft(node)
+            path.appendleft(node.val)
             node = node.parent
         return path
 
@@ -27,6 +27,10 @@ class Node:
 
     def __hash__(self):
         return hash((self.val, self.parent))
+
+    def __str__(self):
+        par_str = f'{self.parent.val.x}:{self.parent.val.y}' if self.parent else 'None'
+        return f'node_{self.val}<<({par_str})'
 
 
 def flat_list(lst):
@@ -54,4 +58,4 @@ class ShortestPathFinder:
         while not finish:
             front = flat_list([step_fw(n) for n in front])
 
-        self.path = finish.as_path()
+        self.solution = Solution.from_vertices(list(finish.as_path()))

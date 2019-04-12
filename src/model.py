@@ -19,6 +19,9 @@ class Vertex:
     def __hash__(self):
         return hash((self.x, self.y))
 
+    def __str__(self):
+        return f'vtx({self.x}:{self.y})'
+
 
 class Edge:
     def __init__(self, v1: Vertex, v2: Vertex):
@@ -36,6 +39,10 @@ class Edge:
 
     def __hash__(self):
         return hash(tuple(self.v))
+
+    def __str__(self):
+        v = tuple(self.v)
+        return f'<{v[0]}-{v[1]}>'
 
 
 class Maze:
@@ -67,3 +74,40 @@ class Maze:
 
     def contains(self, v: Vertex):
         return 0 <= v.x < self.n and 0 <= v.y < self.n
+
+
+class Solution:
+
+    @staticmethod
+    def from_vertices(vertices):
+        edges = []
+        for i in range(1, len(vertices)):
+            edges.append(Edge(vertices[i - 1], vertices[i]))
+        return Solution(vertices, edges)
+
+    @staticmethod
+    def from_edges(edges):
+        vertices = []
+        second_v = edges[0].v.intersection(edges[1].v)
+        vertices.append(edges[0].other(second_v))
+        vertices.append(second_v)
+        v = second_v
+        for e in edges[2:]:
+            v = e.other(v)
+            vertices.append(v)
+        return Solution(vertices, edges)
+
+    def __init__(self, vertices, edges):
+        self.vertices = vertices
+        self.edges = edges
+
+    def _validate(self):
+        assert len(self.vertices) == len(self.edges) + 1
+        assert len(self.edges) == len({self.edges})
+        v_set = {self.vertices}
+        for e in self.edges:
+            for v in e.v:
+                assert v in v_set
+
+    def __len__(self):
+        return len(self.vertices)
