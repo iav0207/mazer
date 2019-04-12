@@ -27,9 +27,9 @@ You will find the script output under [out](out) directory.
 - [model.py](src/model.py) – model classes
 - [gen](src/gen) – maze generation algorithms
 - [check](src/check) – maze validation
-- [solve](src/solve) – solutions package
+- [solve](src/solve) – solution algorithms
 - [render](src/render) – rendering components
-- [main](src/__main__.py) – the example script putting the output to
+- [main](src/__main__.py) – the example script putting the output to...
 - [out](out) – the output files directory
 
 ## Examples
