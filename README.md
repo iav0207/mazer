@@ -24,10 +24,12 @@ python3 src/__main__.py
 ## Project structure
 
 - [model.py](src/model.py) – model classes
-- [gen](src/gen) – the package of maze generation algorithms
-- [render](src/render) - the package for maze rendering
+- [gen](src/gen) – maze generation algorithms
+- [check](src/check) – maze validation
+- [solve](src/solve) – solutions package
+- [render](src/render) – rendering components
 - [main](src/__main__.py) – the example script putting the output to
-- [out](out/) – the output files directory
+- [out](out) – the output files directory
 
 ## Examples
 
