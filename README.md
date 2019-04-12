@@ -20,6 +20,7 @@ or
 ```bash
 python3 src/__main__.py
 ```
+You will find the script output under [out](out) directory.
 
 ## Project structure
 
